@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
 
         const techCollection = client.db("TechDB").collection("Technology");
+        const cartCollection = client.db("myCart").collection("Cart");
 
         // Create a data
         app.post('/products', async (req, res) => {
@@ -79,6 +80,14 @@ async function run() {
                 },
             };
             const result = await techCollection.updateOne(filter,updateItem,options);
+            res.send(result);
+        })
+
+        // add to cart by post
+        app.post('/carts', async (req, res) => {
+            const item = req.body;
+            console.log(item);
+            const result = await cartCollection.insertOne(item);
             res.send(result);
         })
 
