@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,25 +30,36 @@ async function run() {
         const techCollection = client.db("TechDB").collection("Technology");
 
         // Create a data
-        app.post('/products',async(req,res)=>{
+        app.post('/products', async (req, res) => {
             const item = req.body;
             // console.log(item);
             const result = await techCollection.insertOne(item);
             res.send(result);
         })
 
-        // read single data 
-        app.get("/products/:brand",async(req,res)=>{
+        // read brand wise data 
+        app.get("/products/:brand", async (req, res) => {
             const brand = req.params.brand;
-            console.log(brand);
+            // console.log(brand);
             const query = {
-                brand : brand
+                brand: brand
             };
             const result = await techCollection.find(query).toArray();
             console.log(result);
             res.send(result);
         })
 
+        // read single data
+        app.get("/update/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const query = {
+                _id:new ObjectId(id),
+            };
+            const result = await techCollection.findOne(query);
+            console.log(result);
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection
