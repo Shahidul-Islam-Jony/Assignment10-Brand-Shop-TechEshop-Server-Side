@@ -55,7 +55,7 @@ async function run() {
             const id = req.params.id;
             console.log(id);
             const query = {
-                _id:new ObjectId(id),
+                _id: new ObjectId(id),
             };
             const result = await techCollection.findOne(query);
             console.log(result);
@@ -63,15 +63,15 @@ async function run() {
         })
 
         // update data
-        app.put("/update/:id",async(req,res)=>{
+        app.put("/update/:id", async (req, res) => {
             const id = req.params.id;
             const item = req.body;
-            const filter = {_id: new ObjectId(id)};
-            const options = {upsert: true};
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
 
             const updateItem = {
-                $set:{
-                    brand : item.brand ,
+                $set: {
+                    brand: item.brand,
                     name: item.name,
                     photo: item.photo,
                     price: item.price,
@@ -79,7 +79,7 @@ async function run() {
                     type: item.type,
                 },
             };
-            const result = await techCollection.updateOne(filter,updateItem,options);
+            const result = await techCollection.updateOne(filter, updateItem, options);
             res.send(result);
         })
 
@@ -89,6 +89,11 @@ async function run() {
             console.log(item);
             const result = await cartCollection.insertOne(item);
             res.send(result);
+        })
+        // find many for user MyCart route
+        app.get("/carts", async (req, res) => {
+           const data = await cartCollection.find().toArray();
+           res.send(data);
         })
 
 
