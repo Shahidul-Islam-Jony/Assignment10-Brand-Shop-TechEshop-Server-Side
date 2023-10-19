@@ -61,6 +61,27 @@ async function run() {
             res.send(result);
         })
 
+        // update data
+        app.put("/update/:id",async(req,res)=>{
+            const id = req.params.id;
+            const item = req.body;
+            const filter = {_id: new ObjectId(id)};
+            const options = {upsert: true};
+
+            const updateItem = {
+                $set:{
+                    brand : item.brand ,
+                    name: item.name,
+                    photo: item.photo,
+                    price: item.price,
+                    rating: item.rating,
+                    type: item.type,
+                },
+            };
+            const result = await techCollection.updateOne(filter,updateItem,options);
+            res.send(result);
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
